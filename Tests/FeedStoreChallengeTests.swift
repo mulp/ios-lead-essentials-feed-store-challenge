@@ -4,6 +4,21 @@
 
 import XCTest
 import FeedStoreChallenge
+import SQLite3
+
+class SQLiteFeedStore: FeedStore {
+    func deleteCachedFeed(completion: @escaping DeletionCompletion) {
+        
+    }
+    
+    func insert(_ feed: [LocalFeedImage], timestamp: Date, completion: @escaping InsertionCompletion) {
+        
+    }
+    
+    func retrieve(completion: @escaping RetrievalCompletion) {
+        completion(RetrieveCachedFeedResult.empty)
+    }
+}
 
 class FeedStoreChallengeTests: XCTestCase, FeedStoreSpecs {
 	
@@ -20,15 +35,15 @@ class FeedStoreChallengeTests: XCTestCase, FeedStoreSpecs {
     //  ***********************
 
 	func test_retrieve_deliversEmptyOnEmptyCache() {
-//		let sut = makeSUT()
-//
-//		assertThatRetrieveDeliversEmptyOnEmptyCache(on: sut)
+		let sut = makeSUT()
+
+		assertThatRetrieveDeliversEmptyOnEmptyCache(on: sut)
 	}
 
 	func test_retrieve_hasNoSideEffectsOnEmptyCache() {
-//		let sut = makeSUT()
-//
-//		assertThatRetrieveHasNoSideEffectsOnEmptyCache(on: sut)
+		let sut = makeSUT()
+
+		assertThatRetrieveHasNoSideEffectsOnEmptyCache(on: sut)
 	}
 
 	func test_retrieve_deliversFoundValuesOnNonEmptyCache() {
@@ -94,8 +109,11 @@ class FeedStoreChallengeTests: XCTestCase, FeedStoreSpecs {
 	// - MARK: Helpers
 	
 	private func makeSUT() -> FeedStore {
-		fatalError("Must be implemented")
-	}
+//        let fileURL = try! FileManager.default
+//            .url(for: .applicationSupportDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
+//            .appendingPathComponent("feedStoreCache.sqlite")
+        return SQLiteFeedStore()
+    }
 	
 }
 
