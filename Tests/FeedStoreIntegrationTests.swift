@@ -11,6 +11,10 @@ import FeedStoreChallenge
 
 class FeedStoreIntegrationTests: XCTestCase {
 
+    private let fileURL = try! FileManager.default
+        .url(for: .cachesDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
+        .appendingPathComponent("feedStoreCache.sqlite")
+
     //  ***********************
     //
     //  Uncomment and implement the following tests if your
@@ -75,16 +79,20 @@ class FeedStoreIntegrationTests: XCTestCase {
     
     // - MARK: Helpers
     
-    private func makeSUT() -> FeedStore {
-        fatalError("Must be implemented")
+    private func makeSUT() -> FeedStore? {
+        do {
+            return try SQLiteFeedStore(dbURL: fileURL)
+        } catch {
+            return nil
+        }
     }
     
     private func setupEmptyStoreState() {
-
+        try? FileManager.default.removeItem(at: fileURL)
     }
 
     private func undoStoreSideEffects() {
-
+        try? FileManager.default.removeItem(at: fileURL)
     }
     
 }
