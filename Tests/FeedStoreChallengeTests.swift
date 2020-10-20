@@ -4,24 +4,57 @@
 
 import XCTest
 import FeedStoreChallenge
-import SQLite3
 
 class SQLiteFeedStore: FeedStore {
+    private let db: SQLiteDatabaseWrapper
+    
+    init?(dbURL: URL) throws {
+        db = try SQLiteDatabaseWrapper.open(dbURL)
+        try db.prepareTable()
+    }
+    
     func deleteCachedFeed(completion: @escaping DeletionCompletion) {
         
     }
     
     func insert(_ feed: [LocalFeedImage], timestamp: Date, completion: @escaping InsertionCompletion) {
-        
+        do {
+            try db.addNewEntry(feed, timestamp: timestamp)
+            completion(nil)
+        } catch let error {
+            completion(error)
+        }
     }
     
     func retrieve(completion: @escaping RetrievalCompletion) {
-        completion(RetrieveCachedFeedResult.empty)
+        do {
+            let (entries, timestamp) = try db.cacheEntries()
+            if entries.isEmpty {
+                completion(.empty)
+            } else {
+                completion(.found(feed: entries, timestamp: timestamp))
+            }
+        } catch let error {
+            completion(.failure(error))
+        }
     }
 }
 
 class FeedStoreChallengeTests: XCTestCase, FeedStoreSpecs {
 	
+    private let fileURL = try! FileManager.default
+        .url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
+        .appendingPathComponent("feedStoreCache.sqlite")
+
+    override func setUp() {
+        super.setUp()
+        try? FileManager.default.removeItem(at: fileURL)
+    }
+    
+    override func tearDown() {
+        super.tearDown()
+        try? FileManager.default.removeItem(at: fileURL)
+    }
     //  ***********************
     //
     //  Follow the TDD process:
@@ -35,21 +68,21 @@ class FeedStoreChallengeTests: XCTestCase, FeedStoreSpecs {
     //  ***********************
 
 	func test_retrieve_deliversEmptyOnEmptyCache() {
-		let sut = makeSUT()
+		let sut = makeSUT()!
 
 		assertThatRetrieveDeliversEmptyOnEmptyCache(on: sut)
 	}
 
 	func test_retrieve_hasNoSideEffectsOnEmptyCache() {
-		let sut = makeSUT()
+		let sut = makeSUT()!
         
 		assertThatRetrieveHasNoSideEffectsOnEmptyCache(on: sut)
 	}
 
 	func test_retrieve_deliversFoundValuesOnNonEmptyCache() {
-//		let sut = makeSUT()
-//
-//		assertThatRetrieveDeliversFoundValuesOnNonEmptyCache(on: sut)
+		let sut = makeSUT()!
+
+        assertThatRetrieveDeliversFoundValuesOnNonEmptyCache(on: sut)
 	}
 
 	func test_retrieve_hasNoSideEffectsOnNonEmptyCache() {
@@ -108,11 +141,12 @@ class FeedStoreChallengeTests: XCTestCase, FeedStoreSpecs {
 	
 	// - MARK: Helpers
 	
-	private func makeSUT() -> FeedStore {
-//        let fileURL = try! FileManager.default
-//            .url(for: .applicationSupportDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
-//            .appendingPathComponent("feedStoreCache.sqlite")
-        return SQLiteFeedStore()
+	private func makeSUT() -> FeedStore? {
+        do {
+            return try SQLiteFeedStore(dbURL: fileURL)
+        } catch {
+            return nil
+        }
     }
 	
 }
