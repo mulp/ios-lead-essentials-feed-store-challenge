@@ -5,48 +5,6 @@
 import XCTest
 import FeedStoreChallenge
 
-class SQLiteFeedStore: FeedStore {
-    private let db: SQLiteDatabaseWrapper
-    
-    init?(dbURL: URL) throws {
-        db = try SQLiteDatabaseWrapper.open(dbURL)
-        try db.prepareTable()
-    }
-    
-    func deleteCachedFeed(completion: @escaping DeletionCompletion) {
-        do {
-            try db.clearCache()
-            completion(nil)
-        } catch let error {
-            completion(error)
-        }
-    }
-    
-    func insert(_ feed: [LocalFeedImage], timestamp: Date, completion: @escaping InsertionCompletion) {
-        deleteCachedFeed { [db] error in
-            do {
-                try db.addNewEntry(feed, timestamp: timestamp)
-                completion(nil)
-            } catch let error {
-                completion(error)
-            }
-        }
-    }
-    
-    func retrieve(completion: @escaping RetrievalCompletion) {
-        do {
-            let (entries, timestamp) = try db.cacheEntries()
-            if entries.isEmpty {
-                completion(.empty)
-            } else {
-                completion(.found(feed: entries, timestamp: timestamp))
-            }
-        } catch let error {
-            completion(.failure(error))
-        }
-    }
-}
-
 class FeedStoreChallengeTests: XCTestCase, FeedStoreSpecs {
 	
     private let fileURL = try! FileManager.default

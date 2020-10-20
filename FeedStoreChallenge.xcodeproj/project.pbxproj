@@ -19,6 +19,7 @@
 		08CE2BB32285BCE700183A1B /* XCTestCase+FailableInsertFeedStoreSpecs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08CE2BAE2285BCE700183A1B /* XCTestCase+FailableInsertFeedStoreSpecs.swift */; };
 		08CE2BB52285BEF100183A1B /* FeedStoreChallengeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08CE2BB42285BEF100183A1B /* FeedStoreChallengeTests.swift */; };
 		257C50FF253DD17F00B0566B /* SQLiteDatabaseWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 257C50FE253DD17F00B0566B /* SQLiteDatabaseWrapper.swift */; };
+		25EA03CC253F1E1A000AB5DF /* SQLiteFeedStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25EA03CB253F1E1A000AB5DF /* SQLiteFeedStore.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,6 +48,7 @@
 		08CE2BAE2285BCE700183A1B /* XCTestCase+FailableInsertFeedStoreSpecs.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "XCTestCase+FailableInsertFeedStoreSpecs.swift"; sourceTree = "<group>"; };
 		08CE2BB42285BEF100183A1B /* FeedStoreChallengeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedStoreChallengeTests.swift; sourceTree = "<group>"; };
 		257C50FE253DD17F00B0566B /* SQLiteDatabaseWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SQLiteDatabaseWrapper.swift; sourceTree = "<group>"; };
+		25EA03CB253F1E1A000AB5DF /* SQLiteFeedStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SQLiteFeedStore.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -93,6 +95,7 @@
 				08CE2BA52285BCB600183A1B /* FeedStore.swift */,
 				08CE2B8F2285BBD100183A1B /* Info.plist */,
 				257C50FE253DD17F00B0566B /* SQLiteDatabaseWrapper.swift */,
+				25EA03CB253F1E1A000AB5DF /* SQLiteFeedStore.swift */,
 			);
 			path = FeedStoreChallenge;
 			sourceTree = "<group>";
@@ -234,6 +237,7 @@
 				08CE2BA62285BCB600183A1B /* FeedStore.swift in Sources */,
 				257C50FF253DD17F00B0566B /* SQLiteDatabaseWrapper.swift in Sources */,
 				08CE2BA82285BCC600183A1B /* LocalFeedImage.swift in Sources */,
+				25EA03CC253F1E1A000AB5DF /* SQLiteFeedStore.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
