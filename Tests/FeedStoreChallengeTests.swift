@@ -8,7 +8,7 @@ import FeedStoreChallenge
 class FeedStoreChallengeTests: XCTestCase, FeedStoreSpecs {
 	
     private let fileURL = try! FileManager.default
-        .url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
+        .url(for: .cachesDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
         .appendingPathComponent("feedStoreCache.sqlite")
 
     override func setUp() {
