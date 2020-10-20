@@ -102,6 +102,17 @@ public class SQLiteDatabaseWrapper {
         }
     }
     
+    public func clearCache() throws {
+        let deleteSql = "DELETE FROM FeedImageCache;"
+
+        let deleteStatement = try prepareStatement(sql: deleteSql)
+        if sqlite3_step(deleteStatement) == SQLITE_DONE {
+            sqlite3_finalize(deleteStatement)
+        } else {
+            throw SQLiteError.query(message: errorMessage)
+        }
+    }
+
     public static func open(_ dbURL: URL) throws -> SQLiteDatabaseWrapper {
         var dbPointer: OpaquePointer?
         guard sqlite3_open_v2(dbURL.path, &dbPointer, SQLITE_OPEN_CREATE | SQLITE_OPEN_READWRITE | SQLITE_OPEN_FULLMUTEX, nil) == SQLITE_OK else {

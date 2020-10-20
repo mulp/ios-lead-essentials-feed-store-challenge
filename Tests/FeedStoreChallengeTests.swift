@@ -14,15 +14,22 @@ class SQLiteFeedStore: FeedStore {
     }
     
     func deleteCachedFeed(completion: @escaping DeletionCompletion) {
-        
-    }
-    
-    func insert(_ feed: [LocalFeedImage], timestamp: Date, completion: @escaping InsertionCompletion) {
         do {
-            try db.addNewEntry(feed, timestamp: timestamp)
+            try db.clearCache()
             completion(nil)
         } catch let error {
             completion(error)
+        }
+    }
+    
+    func insert(_ feed: [LocalFeedImage], timestamp: Date, completion: @escaping InsertionCompletion) {
+        deleteCachedFeed { [db] error in
+            do {
+                try db.addNewEntry(feed, timestamp: timestamp)
+                completion(nil)
+            } catch let error {
+                completion(error)
+            }
         }
     }
     
@@ -104,9 +111,9 @@ class FeedStoreChallengeTests: XCTestCase, FeedStoreSpecs {
 	}
 
 	func test_insert_overridesPreviouslyInsertedCacheValues() {
-//		let sut = makeSUT()
-//
-//		assertThatInsertOverridesPreviouslyInsertedCacheValues(on: sut)
+		let sut = makeSUT()!
+
+		assertThatInsertOverridesPreviouslyInsertedCacheValues(on: sut)
 	}
 
 	func test_delete_deliversNoErrorOnEmptyCache() {
