@@ -8,6 +8,10 @@
 
 import Foundation
 
+enum SQLiteFeedError: Error {
+    case wrongTimestamp
+}
+
 public class SQLiteFeedStore: FeedStore {
     private let db: SQLiteDatabaseWrapper
     
@@ -42,6 +46,9 @@ public class SQLiteFeedStore: FeedStore {
             if entries.isEmpty {
                 completion(.empty)
             } else {
+                guard let timestamp = timestamp else {
+                    throw SQLiteFeedError.wrongTimestamp
+                }
                 completion(.found(feed: entries, timestamp: timestamp))
             }
         } catch let error {

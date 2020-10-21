@@ -50,13 +50,15 @@ public class SQLiteDatabaseWrapper {
                                 """
         var statement: OpaquePointer?
         if sqlite3_exec(dbPointer, createTableSQL, nil, &statement, nil) != SQLITE_OK {
-            let errmsg = String(cString: sqlite3_errmsg(dbPointer)!)
-            print("error creating table: \(errmsg)")
+            if let sqlError = sqlite3_errmsg(dbPointer) {
+                let errmsg = String(cString: sqlError)
+                throw SQLiteError.prepare(message: errmsg)
+            }
         }
         sqlite3_finalize(statement)
     }
     
-    public func cacheEntries() throws -> ([LocalFeedImage], Date) {
+    public func cacheEntries() throws -> ([LocalFeedImage], Date?) {
         var items = [LocalFeedImage]()
         let queryStatement = "SELECT * FROM FeedImageCache"
         let statement = try prepareStatement(sql: queryStatement)
@@ -78,7 +80,7 @@ public class SQLiteDatabaseWrapper {
             }
         }
         sqlite3_finalize(statement)
-        return (items, timestamp ?? Date())
+        return (items, timestamp)
     }
     
     public func addNewEntry(_ feeds: [LocalFeedImage], timestamp: Date) throws {
