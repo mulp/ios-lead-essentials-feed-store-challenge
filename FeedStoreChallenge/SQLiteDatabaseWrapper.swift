@@ -58,7 +58,7 @@ public class SQLiteDatabaseWrapper {
         sqlite3_finalize(statement)
     }
     
-    public func cacheEntries() throws -> ([LocalFeedImage], Date?) {
+    public func cacheEntries() throws -> ([LocalFeedImage], Date)? {
         var items = [LocalFeedImage]()
         let queryStatement = "SELECT * FROM FeedImageCache"
         let statement = try prepareStatement(sql: queryStatement)
@@ -80,7 +80,9 @@ public class SQLiteDatabaseWrapper {
             }
         }
         sqlite3_finalize(statement)
-        return (items, timestamp)
+        guard !items.isEmpty,
+              let cacheTimestamp = timestamp else { return nil }
+        return (items, cacheTimestamp)
     }
     
     public func addNewEntry(_ feeds: [LocalFeedImage], timestamp: Date) throws {

@@ -42,14 +42,10 @@ public class SQLiteFeedStore: FeedStore {
     
     public func retrieve(completion: @escaping RetrievalCompletion) {
         do {
-            let (entries, timestamp) = try db.cacheEntries()
-            if entries.isEmpty {
-                completion(.empty)
-            } else {
-                guard let timestamp = timestamp else {
-                    throw SQLiteFeedError.wrongTimestamp
-                }
+            if let (entries, timestamp) = try db.cacheEntries() {
                 completion(.found(feed: entries, timestamp: timestamp))
+            } else {
+                completion(.empty)
             }
         } catch let error {
             completion(.failure(error))
